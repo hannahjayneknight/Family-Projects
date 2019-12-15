@@ -44,7 +44,7 @@ def main():
         for i in range(len(list_people)):
 
             # generates a randomly generated person from list 2
-            random_person = list_people2[random.randint( 0, len(list_people2))]
+            random_person = list_people2[random.randint( 0, len(list_people2)) - 1]
 
             # checks that a randomly selected person is not the same as the person themself
             if random_person != list_people[i] :
@@ -54,13 +54,14 @@ def main():
 
                 # removes the person from list2 so they cannot be picked again
                 list_people2.remove(random_person)
+            else:
+                continue
         return d
 
-print(allocate_secret_santa())
+    print(allocate_secret_santa())
+
+    
 
 if __name__ == "__main__":
     main()
 
-    '''
-    list_people[i]: list_people[random.randint( 0, len(list_people))]
-    '''
