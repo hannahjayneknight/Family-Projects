@@ -31,6 +31,7 @@ def main():
         Makes a dictionary where the key is the person buying the gift
         and the value is the person they are buying for. 
         '''
+        
         # creates an empty dictionary ready to be filled
         d = {}
 
@@ -43,25 +44,33 @@ def main():
         # runs through each participant in the main list...
         for i in range(len(list_people)):
 
-            # generates a randomly generated person from list 2
-            random_person = list_people2[random.randint( 0, len(list_people2)) - 1]
+            # a mini-loop that picks a random person for a secret santa to buy for. It will continue to 
+            # pick until the person picked is different to the secret santa
+            while True:
+                # generates a randomly generated person from list 2
+                random_person = list_people2[random.randint( 0, len(list_people2)) - 1]
+                # if random person is not the same as the secret santa, the loop breaks
+                if random_person != list_people[i] :
+                    break
 
-            # checks that a randomly selected person is not the same as the person themself
-            if random_person != list_people[i] :
+        
+            # if they're not, then the person is added to the dictionary as a key, and their value is the random person
+            d.update( {list_people[i]: random_person })
 
-                # if they're not, then the person is added to the dictionary as a key, and their value is the random person
-                d.update( {list_people[i]: random_person })
+            # removes the person from list2 so they cannot be picked again
+            list_people2.remove(random_person)
 
-                # removes the person from list2 so they cannot be picked again
-                list_people2.remove(random_person)
-            else:
-                continue
         return d
 
-    print(allocate_secret_santa())
+    def make_secret_santa_file():
+        with open('/Users/hannahjayneknight/Desktop/git/personal/secret_santa_dict.txt', 'w') as f:
+            d = str(allocate_secret_santa())
+            f.write(d)
+        return
+
+    make_secret_santa_file()
 
     
 
 if __name__ == "__main__":
     main()
-
