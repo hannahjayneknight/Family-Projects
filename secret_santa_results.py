@@ -16,7 +16,7 @@ def main():
     def find_secret_santa():
         d = import_dict()
         name = input('Please type in your name: ')
-        print('You are buying for... ' + d[name])
+        print('You are buying for... ' + d[name] + '\n')
         print('Now please clear the terminal for the next user.')
         return 
 
