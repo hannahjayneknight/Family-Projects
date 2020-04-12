@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# coding: latin-1
 '''
 A script that checks every minute if it is time for someone to do a chore. If it is, then
 a message is sent to them.
@@ -13,14 +15,13 @@ from datetime import timedelta
 import csv
 import requests
 
-datalocation = '/Users/hannahjayneknight/Desktop/git/personal/'
 
 def sendmessage( number, message ):
     passwords = {}
     # opens the file with the passwords on
-    with open(datalocation + 'babble_passwords.txt', 'r') as f:
-        # runs through each line and makes a dictionary where the key is the 
-        # name of the password and the value is the password itself
+    with open('babble_passwords.txt', 'r') as f:
+        # runs through each line and makes a dictionary where the key is the
+        # name of the password and the value is the password itself
         for line in f:
             (key, val) = line.split()
             passwords[key] = val
@@ -34,7 +35,7 @@ def sendmessage( number, message ):
     return response
 
 peopledict = {}
-with open( datalocation + 'mobile_numbers.csv', newline='' ) as mobile_numbers:
+with open('mobile_numbers.csv') as mobile_numbers:
     # 
     reader = csv.DictReader(mobile_numbers)
     for row in reader:
@@ -45,7 +46,7 @@ last_check = datetime.datetime.now() - timedelta( minutes = 5 )
 while True:
     # imports the timetable
     # NB: converts each element in the table to a string
-    timetable = np.genfromtxt( datalocation + 'timetable.csv', skip_header=1, delimiter=',', dtype=(str))
+    timetable = np.genfromtxt('timetable.csv', skip_header=1, delimiter=',', dtype=(str))
 
     # loops through each row 
     for timetablerow in timetable:
