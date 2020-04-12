@@ -17,7 +17,10 @@ datalocation = '/Users/hannahjayneknight/Desktop/git/personal/'
 
 def sendmessage( number, message ):
     passwords = {}
-    with open(datalocation + 'babble_passwords.gitignore', 'r') as f:
+    # opens the file with the passwords on
+    with open(datalocation + 'babble_passwords.txt', 'r') as f:
+        # runs through each line and makes a dictionary where the key is the 
+        # name of the password and the value is the password itself
         for line in f:
             (key, val) = line.split()
             passwords[key] = val
