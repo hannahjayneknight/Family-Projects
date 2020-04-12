@@ -9,29 +9,52 @@ import time
 import datetime
 from dateutil import parser
 import numpy as np
+from datetime import timedelta  
+import csv
+import requests
 
-# imports the timetable
-# NB: converts each element in the table to a string
-timetable = np.genfromtxt('/Users/hannahjayneknight/Desktop/git/personal/timetable.csv', skip_header=1, delimiter=',', dtype=(str))
+datalocation = '/Users/hannahjayneknight/Desktop/git/personal/'
 
+def sendmessage( number, message ):
+    passwords = {}
+    with open(datalocation + 'babble_passwords.gitignore', 'r') as f:
+        for line in f:
+            (key, val) = line.split()
+            passwords[key] = val
+
+    # Number, Message, Domain
+    our_params = {'Number': number, 'Message': message, 'Domain': passwords['bvdomain']}
+
+    response = requests.get(url = passwords['smsurl'], params = our_params, auth=(passwords['bvuser'], passwords['bvpass']) )
+    print( response )
+    print( response.text )
+    return response
+
+peopledict = {}
+with open( datalocation + 'mobile_numbers.csv', newline='' ) as mobile_numbers:
+    # 
+    reader = csv.DictReader(mobile_numbers)
+    for row in reader:
+        peopledict[ row[ "name" ] ] = row[ "number" ]
+
+# so you definitely get the first chore
+last_check = datetime.datetime.now() - timedelta( minutes = 5 )  
 while True:
-    # saves the last time
+    # imports the timetable
+    # NB: converts each element in the table to a string
+    timetable = np.genfromtxt( datalocation + 'timetable.csv', skip_header=1, delimiter=',', dtype=(str))
+
+    # loops through each row 
+    for timetablerow in timetable:
+        # checks if it is the correct weekday
+        if timetablerow [ 0 ] == str(datetime.datetime.today().weekday()):
+            currenttime = datetime.datetime.now()
+            # checks if the time is between five mins ago and the time now
+            if last_check < parser.parse( timetablerow[ 1 ] ) < currenttime:
+                # prints statement
+                print(timetablerow[3] + ', it is your turn to do ' + timetablerow[2])
+                print('Sending sms to ' + peopledict[ str( timetablerow[3] ) ] )
+                sendmessage( peopledict[ str( timetablerow[3] ) ],  timetablerow[3] + ', it is your turn to do ' + timetablerow[2] )
+                
     last_check = datetime.datetime.now()
-
     time.sleep(300)
-
-    # checks if the day is today
-    # loops through the column with the weekday numbers
-    for weekdays in timetable[:, 0]:
-        if weekdays == str(datetime.datetime.today().weekday()):
-
-            # continues to check if it is the correct time
-
-            # loops through the column with all the times
-            for i in timetable[:, 1]:
-                # checks if the time in the column is between the time of the last_check and now
-                if last_check < parser.parse(i) < datetime.datetime.now() :
-                    # saves the row number with the current time as a variable
-                    row_number = i
-                    # print '[name], it is your turn to [chore]'
-                    print(timetable[row_number][3] + ', it is your turn to do ' + timetable[row_number][2])
